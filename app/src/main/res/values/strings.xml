@@ -15,7 +15,5 @@
   -->
 <resources>
     <string name="app_name">Github Query</string>
-    <string name="search_box_hint">Enter query and press Search</string>
-    <string name="url_display_hint_text">In this place will be printed URL</string>
-    <string name="github_search_results_empty_json">Search something...</string>
+    <!--TODO (1) Add a string resource called search with the title "Search"-->
 </resources>

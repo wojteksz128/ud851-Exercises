@@ -22,12 +22,10 @@ import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    // DONE (26) Create an EditText variable called mSearchBoxEditText
     private EditText mSearchBoxEditText;
 
-    // DONE (27) Create a TextView variable called mUrlDisplayTextView
     private TextView mUrlDisplayTextView;
-    // DONE (28) Create a TextView variable called mSearchResultsTextView
+
     private TextView mSearchResultsTextView;
 
     @Override
@@ -35,12 +33,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // DONE (29) Use findViewById to get a reference to mSearchBoxEditText
-        this.mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);
+        mSearchBoxEditText = (EditText) findViewById(R.id.et_search_box);
 
-        // DONE (30) Use findViewById to get a reference to mUrlDisplayTextView
-        this.mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);
-        // DONE (31) Use findViewById to get a reference to mSearchResultsTextView
-        this.mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
+        mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);
+        mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
     }
+
+    // Do 2 - 7 in menu.xml ///////////////////////////////////////////////////////////////////////
+    // TODO (2) Create a menu xml called 'main.xml' in the res->menu folder
+    // TODO (3) Add one menu item to your menu
+    // TODO (4) Give the menu item an id of @+id/action_search
+    // TODO (5) Set the orderInCategory to 1
+    // TODO (6) Show this item if there is room (use app:showAsAction, not android:showAsAction)
+    // TODO (7) Set the title to the search string ("Search") from strings.xml
+    // Do 2 - 7 in menu.xml ///////////////////////////////////////////////////////////////////////
+
+
+    // TODO (8) Override onCreateOptionsMenu
+    // TODO (9) Within onCreateOptionsMenu, use getMenuInflater().inflate to inflate the menu
+    // TODO (10) Return true to display your menu
+
+    // TODO (11) Override onOptionsItemSelected
+    // TODO (12) Within onOptionsItemSelected, get the ID of the item that was selected
+    // TODO (13) If the item's ID is R.id.action_search, show a Toast and return true to tell Android that you've handled this menu click
+    // TODO (14) Don't forgot to call .show() on your Toast
+    // TODO (15) If you do NOT handle the menu click, return super.onOptionsItemSelected to let Android handle the menu click
 }
