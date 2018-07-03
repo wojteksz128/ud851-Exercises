@@ -19,11 +19,8 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.TextView;
 
-import java.util.Arrays;
-
 public class MainActivity extends AppCompatActivity {
 
-    // COMPLETE (1) Declare a TextView variable called mToysListTextView
     private TextView mToysListTextView;
 
     @Override
@@ -31,17 +28,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // COMPLETE (3) Use findViewById to get a reference to the TextView from the layout
-        mToysListTextView = (TextView) findViewById(R.id.tv_toys_name);
+        /*
+         * Using findViewById, we get a reference to our TextView from xml. This allows us to
+         * do things like set the text of the TextView.
+         */
+        mToysListTextView = (TextView) findViewById(R.id.tv_toy_names);
 
-        // COMPLETE (4) Use the static ToyBox.getToyNames method and store the names in a String array
-        final String[] toyNames = ToyBox.getToyNames();
+        /*
+         * This String array contains names of classic toys. After all, these are toy apps. We
+         * wanted to create a way to break concepts down into smaller pieces that we thought might
+         * be a little easier to understand. In each lesson, we'll demonstrate new concepts using a
+         * toy app (no, sadly every one won't have ACTUAL toys in it) and then we'll guide you
+         * through adding the functionality that you've just learned by having you use those
+         * concepts in Sunshine! Let us know what you think! We're really excited to have you
+         * taking this course.
+         */
+        String[] toyNames = ToyBox.getToyNames();
 
-        // COMPLETE (5) Loop through each toy and append the name to the TextView (add \n for spacing)
-        StringBuilder toyNamesString = new StringBuilder();
+        /*
+         * Iterate through the array and append the Strings to the TextView. The reason why we add
+         * the "\n\n\n" after the String is to give visual separation between each String in the
+         * TextView. Later, we'll learn about a better way to display lists of data.
+         */
         for (String toyName : toyNames) {
-            toyNamesString.append(toyName).append("\n\n\n");
+            mToysListTextView.append(toyName + "\n\n\n");
         }
-        mToysListTextView.setText(toyNamesString);
     }
 }
