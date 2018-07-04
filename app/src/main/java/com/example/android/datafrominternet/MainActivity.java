@@ -15,15 +15,18 @@
  */
 package com.example.android.datafrominternet;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.datafrominternet.utilities.NetworkUtils;
 
+import java.io.IOException;
 import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
@@ -55,8 +58,15 @@ public class MainActivity extends AppCompatActivity {
         String githubQuery = mSearchBoxEditText.getText().toString();
         URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
         mUrlDisplayTextView.setText(githubSearchUrl.toString());
-        // TODO (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
-        // TODO (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
+        // DONE (2) Call getResponseFromHttpUrl and display the results in mSearchResultsTextView
+        // DONE (3) Surround the call to getResponseFromHttpUrl with a try / catch block to catch an IOException
+        try {
+            mSearchResultsTextView.setText(NetworkUtils.getResponseFromHttpUrl(githubSearchUrl));
+        } catch (IOException e) {
+            e.printStackTrace();
+            Context context = MainActivity.this;
+            Toast.makeText(context, e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 
     @Override
