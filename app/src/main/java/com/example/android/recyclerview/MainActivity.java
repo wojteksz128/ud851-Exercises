@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.Menu;
 import android.view.MenuItem;
 
+// TODO (8) Implement GreenAdapter.ListItemClickListener from the MainActivity
 public class MainActivity extends AppCompatActivity {
 
     private static final int NUM_LIST_ITEMS = 100;
@@ -32,6 +33,8 @@ public class MainActivity extends AppCompatActivity {
      */
     private GreenAdapter mAdapter;
     private RecyclerView mNumbersList;
+
+    // TODO (9) Create a Toast variable called mToast to store the current Toast
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
          */
         mNumbersList.setHasFixedSize(true);
 
+        // TODO (13) Pass in this as the ListItemClickListener to the GreenAdapter constructor
         /*
          * The GreenAdapter is responsible for displaying each item in the list.
          */
@@ -71,38 +75,35 @@ public class MainActivity extends AppCompatActivity {
         mNumbersList.setAdapter(mAdapter);
     }
 
-    // DONE (2) Create a menu resource in res/menu/ called main.xml
-    // DONE (3) Add one item to the menu with an ID of action_refresh
-    // DONE (4) Set the title of the menu item to "Refresh" using strings.xml
-    // DONE (5) Set the orderInCategory value to 1 to make sure this item is the first in the list
-    // DONE (6) Set app:showAsAction to ifRoom to display the menu item in the ActionBar if there is room
-
-
-    // DONE (7) Override onCreateOptionsMenu
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // DONE (8) Use getMenuInflater().inflate to inflate the menu
         getMenuInflater().inflate(R.menu.main, menu);
-        // DONE (9) Return true to display this menu
         return true;
     }
 
-
-    // DONE (10) Override onOptionsItemSelected
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // DONE (11) Within this method, get the ID from the MenuItem
-        final int selectedItemId = item.getItemId();
 
-        // DONE (12) If the ID equals R.id.action_refresh, create and set a new adapter on the RecyclerView and return true
-        switch (selectedItemId) {
+        int itemId = item.getItemId();
+
+        switch (itemId) {
+            /*
+             * When you click the reset menu item, we want to start all over
+             * and display the pretty gradient again. There are a few similar
+             * ways of doing this, with this one being the simplest of those
+             * ways. (in our humble opinion)
+             */
             case R.id.action_refresh:
+                // TODO (14) Pass in this as the ListItemClickListener to the GreenAdapter constructor
                 mAdapter = new GreenAdapter(NUM_LIST_ITEMS);
                 mNumbersList.setAdapter(mAdapter);
                 return true;
         }
-        // DONE (13) For now, for all other IDs, return super.onOptionsItemSelected
+
         return super.onOptionsItemSelected(item);
     }
 
+    // TODO (10) Override ListItemClickListener's onListItemClick method
+    // TODO (11) In the beginning of the method, cancel the Toast if it isn't null
+    // TODO (12) Show a Toast when an item is clicked, displaying that item number that was clicked
 }
