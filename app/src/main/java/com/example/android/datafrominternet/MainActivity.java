@@ -15,14 +15,20 @@
  */
 package com.example.android.datafrominternet;
 
-import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
+
+import com.example.android.datafrominternet.utilities.NetworkUtils;
+
+import java.io.IOException;
+import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +37,12 @@ public class MainActivity extends AppCompatActivity {
     private TextView mUrlDisplayTextView;
 
     private TextView mSearchResultsTextView;
+
+    // DONE (12) Create a variable to store a reference to the error message TextView
+    private TextView mErrorMessageTextView;
+
+    // DONE (24) Create a ProgressBar variable to store a reference to the ProgressBar
+    private ProgressBar mLoadingIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,21 +53,78 @@ public class MainActivity extends AppCompatActivity {
 
         mUrlDisplayTextView = (TextView) findViewById(R.id.tv_url_display);
         mSearchResultsTextView = (TextView) findViewById(R.id.tv_github_search_results_json);
+
+        // DONE (13) Get a reference to the error TextView using findViewById
+        mErrorMessageTextView = (TextView) findViewById(R.id.tv_error_message_display);
+
+        // DONE (25) Get a reference to the ProgressBar using findViewById
+        mLoadingIndicator = (ProgressBar) findViewById(R.id.pb_loading_indicator);
     }
 
-    // Do 2 - 7 in menu.xml ///////////////////////////////////////////////////////////////////////
-    // DONE (2) Create a menu xml called 'main.xml' in the res->menu folder
-    // DONE (3) Add one menu item to your menu
-    // DONE (4) Give the menu item an id of @+id/action_search
-    // DONE (5) Set the orderInCategory to 1
-    // DONE (6) Show this item if there is room (use app:showAsAction, not android:showAsAction)
-    // DONE (7) Set the title to the search string ("Search") from strings.xml
-    // Do 2 - 7 in menu.xml ///////////////////////////////////////////////////////////////////////
+    /**
+     * This method retrieves the search text from the EditText, constructs the
+     * URL (using {@link NetworkUtils}) for the github repository you'd like to find, displays
+     * that URL in a TextView, and finally fires off an AsyncTask to perform the GET request using
+     * our {@link GithubQueryTask}
+     */
+    private void makeGithubSearchQuery() {
+        String githubQuery = mSearchBoxEditText.getText().toString();
+        URL githubSearchUrl = NetworkUtils.buildUrl(githubQuery);
+        mUrlDisplayTextView.setText(githubSearchUrl.toString());
+        new GithubQueryTask().execute(githubSearchUrl);
+    }
 
+    // DONE (14) Create a method called showJsonDataView to show the data and hide the error
+    private void showJsonDataView() {
+        // First, make sure the error is invisible
+        mErrorMessageTextView.setVisibility(View.INVISIBLE);
+        // Then, make sure the JSON data is visible
+        mSearchResultsTextView.setVisibility(View.VISIBLE);
+    }
 
-    // DONE (8) Override onCreateOptionsMenu
-    // DONE (9) Within onCreateOptionsMenu, use getMenuInflater().inflate to inflate the menu
-    // DONE (10) Return true to display your menu
+    // DONE (15) Create a method called showErrorMessage to show the error and hide the data
+    private void showErrorMessage() {
+        // First, make sure the JSON data is invisible
+        mSearchResultsTextView.setVisibility(View.INVISIBLE);
+        // Then, make sure the error is visible
+        mErrorMessageTextView.setVisibility(View.VISIBLE);
+    }
+
+    public class GithubQueryTask extends AsyncTask<URL, Void, String> {
+
+        // DONE (26) Override onPreExecute to set the loading indicator to visible
+
+        @Override
+        protected void onPreExecute() {
+            mLoadingIndicator.setVisibility(View.VISIBLE);
+        }
+
+        @Override
+        protected String doInBackground(URL... params) {
+            URL searchUrl = params[0];
+            String githubSearchResults = null;
+            try {
+                githubSearchResults = NetworkUtils.getResponseFromHttpUrl(searchUrl);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return githubSearchResults;
+        }
+
+        @Override
+        protected void onPostExecute(String githubSearchResults) {
+            // DONE (27) As soon as the loading is complete, hide the loading indicator
+            mLoadingIndicator.setVisibility(View.INVISIBLE);
+            if (githubSearchResults != null && !githubSearchResults.equals("")) {
+                // DONE (17) Call showJsonDataView if we have valid, non-null results
+                showJsonDataView();
+                mSearchResultsTextView.setText(githubSearchResults);
+            } else {
+                // DONE (16) Call showErrorMessage if the result is null in onPostExecute
+                showErrorMessage();
+            }
+        }
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -63,23 +132,13 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-
-    // TODO (11) Override onOptionsItemSelected
-    // TODO (12) Within onOptionsItemSelected, get the ID of the item that was selected
-    // TODO (13) If the item's ID is R.id.action_search, show a Toast and return true to tell Android that you've handled this menu click
-    // TODO (14) Don't forgot to call .show() on your Toast
-    // TODO (15) If you do NOT handle the menu click, return super.onOptionsItemSelected to let Android handle the menu click
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        final int selectedItemId = item.getItemId();
-
-        if (selectedItemId == R.id.action_search) {
-            Context context = MainActivity.this;
-            String message = "Search clicked";
-            Toast.makeText(context, message, Toast.LENGTH_LONG).show();
+        int itemThatWasClickedId = item.getItemId();
+        if (itemThatWasClickedId == R.id.action_search) {
+            makeGithubSearchQuery();
+            return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 }

@@ -12,9 +12,10 @@
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
   See the License for the specific language governing permissions and
   limitations under the License.
-  -->
+-->
 <resources>
     <string name="app_name">Github Query</string>
-    <!--DONE (1) Add a string resource called search with the title "Search"-->
     <string name="search">Search</string>
+    <!--DONE (1) Add a string stating that an error has occurred-->
+    <string name="network_error">Some error has occurred.</string>
 </resources>
