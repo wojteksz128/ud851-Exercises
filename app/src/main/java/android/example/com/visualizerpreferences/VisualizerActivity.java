@@ -48,8 +48,6 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
         setupPermissions();
     }
 
-    // DONE (4) Update setupSharedPreferences and onSharedPreferenceChanged to load the color
-    // from shared preferences. Call setColor, passing in the color you got
     private void setupSharedPreferences() {
         // Get all of the values from shared preferences to set it up
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -66,9 +64,12 @@ public class VisualizerActivity extends AppCompatActivity implements SharedPrefe
     }
 
     private void loadColorFromPreferences(SharedPreferences sharedPreferences) {
-        mVisualizerView.setColor(sharedPreferences.getString(getString(R.string.pref_color_key), getString(R.string.pref_color_red_value)));
+        mVisualizerView.setColor(sharedPreferences.getString(getString(R.string.pref_color_key),
+                getString(R.string.pref_color_red_value)));
     }
 
+    // Updates the screen if the shared preferences change. This method is required when you make a
+    // class implement OnSharedPreferenceChangedListener
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_show_bass_key))) {
