@@ -25,12 +25,12 @@
             android:name="com.example.android.todolist.AddTaskActivity"
             android:label="@string/add_task_activity_name" />
 
-        <!-- DONE (3) Register the TaskContentProvider -->
-        <!-- DONE (4) Set name, authorities, and exported attributes -->
+        <!-- Register the TaskContentProvider -->
+        <!-- Set name, authorities, and exported attributes -->
         <!-- exported = false limits access to this ContentProvider to only this app -->
         <provider
-            android:authorities="com.example.android.todolist"
             android:name="com.example.android.todolist.data.TaskContentProvider"
+            android:authorities="com.example.android.todolist"
             android:exported="false"/>
 
     </application>
