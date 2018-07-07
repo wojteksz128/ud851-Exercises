@@ -7,11 +7,11 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 
-import com.example.android.waitlist.data.TestUtil;
 import com.example.android.waitlist.data.WaitlistContract;
 import com.example.android.waitlist.data.WaitlistDbHelper;
 
@@ -21,9 +21,12 @@ public class MainActivity extends AppCompatActivity {
     private GuestListAdapter mAdapter;
     private SQLiteDatabase mDb;
 
-    // TODO (1) Create local EditText members for mNewGuestNameEditText and mNewPartySizeEditText
+    // DONE (1) Create local EditText members for mNewGuestNameEditText and mNewPartySizeEditText
+    private EditText mNewGuestNameEditText;
+    private EditText mNewPartySizeEditText;
 
-    // TODO (13) Create a constant string LOG_TAG that is equal to the class.getSimpleName()
+    // DONE (13) Create a constant string LOG_TAG that is equal to the class.getSimpleName()
+    private final String LOG_TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +38,9 @@ public class MainActivity extends AppCompatActivity {
         // Set local attributes to corresponding views
         waitlistRecyclerView = (RecyclerView) this.findViewById(R.id.all_guests_list_view);
 
-        // TODO (2) Set the Edit texts to the corresponding views using findViewById
+        // DONE (2) Set the Edit texts to the corresponding views using findViewById
+        mNewGuestNameEditText = (EditText) findViewById(R.id.person_name_edit_text);
+        mNewPartySizeEditText = (EditText) findViewById(R.id.party_count_edit_text);
 
         // Set layout for the RecyclerView, because it's a list we are using the linear layout
         waitlistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -48,8 +53,8 @@ public class MainActivity extends AppCompatActivity {
         // because you will be adding restaurant customers
         mDb = dbHelper.getWritableDatabase();
 
-        // TODO (3) Remove this fake data call since we will be inserting our own data now
-        TestUtil.insertFakeData(mDb);
+        // DONE (3) Remove this fake data call since we will be inserting our own data now
+//        TestUtil.insertFakeData(mDb);
 
         // Get all guest info from the database and save in a cursor
         Cursor cursor = getAllGuests();
@@ -69,20 +74,28 @@ public class MainActivity extends AppCompatActivity {
      */
     public void addToWaitlist(View view) {
 
-        // TODO (9) First thing, check if any of the EditTexts are empty, return if so
+        // DONE (9) First thing, check if any of the EditTexts are empty, return if so
+        if (TextUtils.isEmpty(mNewGuestNameEditText.getText().toString()) || TextUtils.isEmpty(mNewPartySizeEditText.getText().toString())) {
+            return;
+        }
+        // DONE (10) Create an integer to store the party size and initialize to 1
+        int partySize = 1;
+        // DONE (11) Use Integer.parseInt to parse mNewPartySizeEditText.getText to an integer
+        try {
+            partySize = Integer.parseInt(mNewPartySizeEditText.getText().toString());
+        } catch (NumberFormatException e) {
+            // DONE (12) Make sure you surround the Integer.parseInt with a try catch and log any exception
+            Log.e(LOG_TAG, "Failed to parse party size text to number: " + e.getMessage());
+        }
 
-        // TODO (10) Create an integer to store the party size and initialize to 1
-
-        // TODO (11) Use Integer.parseInt to parse mNewPartySizeEditText.getText to an integer
-
-        // TODO (12) Make sure you surround the Integer.parseInt with a try catch and log any exception
-
-        // TODO (14) call addNewGuest with the guest name and party size
-
-        // TODO (19) call mAdapter.swapCursor to update the cursor by passing in getAllGuests()
-
-        // TODO (20) To make the UI look nice, call .getText().clear() on both EditTexts, also call clearFocus() on mNewPartySizeEditText
-
+        // DONE (14) call addNewGuest with the guest name and party size
+        addGuest(mNewGuestNameEditText.getText().toString(), partySize);
+        // DONE (19) call mAdapter.swapCursor to update the cursor by passing in getAllGuests()
+        mAdapter.swapCursor(getAllGuests());
+        // DONE (20) To make the UI look nice, call .getText().clear() on both EditTexts, also call clearFocus() on mNewPartySizeEditText
+        mNewPartySizeEditText.clearFocus();
+        mNewGuestNameEditText.getText().clear();
+        mNewPartySizeEditText.getText().clear();
     }
 
 
@@ -104,15 +117,19 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    // TODO (4) Create a new addGuest method
+    // DONE (4) Create a new addGuest method
+    private long addGuest(String name, int partySize) {
 
-    // TODO (5) Inside, create a ContentValues instance to pass the values onto the insert query
+        // DONE (5) Inside, create a ContentValues instance to pass the values onto the insert query
+        ContentValues contentValues = new ContentValues();
+        // DONE (6) call put to insert the name value with the key COLUMN_GUEST_NAME
+        contentValues.put(WaitlistContract.WaitlistEntry.COLUMN_GUEST_NAME, name);
+        // DONE (7) call put to insert the party size value with the key COLUMN_PARTY_SIZE
+        contentValues.put(WaitlistContract.WaitlistEntry.COLUMN_PARTY_SIZE, partySize);
+        // DONE (8) call insert to run an insert query on TABLE_NAME with the ContentValues created
+        return mDb.insert(WaitlistContract.WaitlistEntry.TABLE_NAME, null, contentValues);
+    }
 
-    // TODO (6) call put to insert the name value with the key COLUMN_GUEST_NAME
-
-    // TODO (7) call put to insert the party size value with the key COLUMN_PARTY_SIZE
-
-    // TODO (8) call insert to run an insert query on TABLE_NAME with the ContentValues created
 
 
 
