@@ -17,8 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     private GuestListAdapter mAdapter;
 
-    // DONE (1) Create a local field member of type SQLiteDatabase called mDb
     private SQLiteDatabase mDb;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,16 +33,22 @@ public class MainActivity extends AppCompatActivity {
         // Set layout for the RecyclerView, because it's a list we are using the linear layout
         waitlistRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
-        // DONE (2) Create a WaitlistDbHelper instance, pass "this" to the constructor as context
-        final WaitlistDbHelper dbHelper = new WaitlistDbHelper(this);
-        // DONE (3) Get a writable database reference using getWritableDatabase and store it in mDb
-        mDb = dbHelper.getWritableDatabase();
-        // DONE (4) call insertFakeData from TestUtil and pass the database reference mDb
-        TestUtil.insertFakeData(mDb);
-        // DONE (7) Run the getAllGuests function and store the result in a Cursor variable
-        final Cursor cursor = getAllGuests();
 
-        // DONE (12) Pass the resulting cursor count to the adapter
+        // Create a DB helper (this will create the DB if run for the first time)
+        WaitlistDbHelper dbHelper = new WaitlistDbHelper(this);
+
+        // Keep a reference to the mDb until paused or killed. Get a writable database
+        // because you will be adding restaurant customers
+        mDb = dbHelper.getWritableDatabase();
+
+        //Fill the database with fake data
+        TestUtil.insertFakeData(mDb);
+
+        // Get all guest info from the database and save in a cursor
+        Cursor cursor = getAllGuests();
+
+        // TODO (10) Pass the entire cursor to the adapter rather than just the count
+        // Create an adapter for that cursor to display the data
         mAdapter = new GuestListAdapter(this, cursor.getCount());
 
         // Link the adapter to the RecyclerView
@@ -59,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    // DONE (5) Create a private method called getAllGuests that returns a cursor
-    private Cursor getAllGuests() {
 
-        // DONE (6) Inside, call query on mDb passing in the table name and projection String [] order by COLUMN_TIMESTAMP
+
+    /**
+     * Query the mDb and get all guests from the waitlist table
+     *
+     * @return Cursor containing the list of guests
+     */
+    private Cursor getAllGuests() {
         return mDb.query(
                 WaitlistContract.WaitlistEntry.TABLE_NAME,
                 null,
@@ -73,5 +83,6 @@ public class MainActivity extends AppCompatActivity {
                 WaitlistContract.WaitlistEntry.COLUMN_TIMESTAMP
         );
     }
+
 
 }
