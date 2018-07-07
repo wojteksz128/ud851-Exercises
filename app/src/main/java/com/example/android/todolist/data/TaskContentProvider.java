@@ -139,20 +139,6 @@ public class TaskContentProvider extends ContentProvider {
                         null,
                         sortOrder);
                 break;
-
-            case TASK_WITH_ID:
-                String id = uri.getPathSegments().get(1);
-                String mSelection = "_id=?";
-                String[] mSelectionArgs = new String[] {id};
-
-                retCursor =  db.query(TABLE_NAME,
-                        projection,
-                        mSelection,
-                        mSelectionArgs,
-                        null,
-                        null,
-                        sortOrder);
-                break;
             // Default exception
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
@@ -170,29 +156,34 @@ public class TaskContentProvider extends ContentProvider {
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
 
-        // DONE (1) Get access to the database and write URI matching code to recognize a single item
+        // Get access to the database and write URI matching code to recognize a single item
         final SQLiteDatabase db = mTaskDbHelper.getWritableDatabase();
-        final int tasksDeleted;
 
-        // DONE (2) Write the code to delete a single row of data
+        int match = sUriMatcher.match(uri);
+        // Keep track of the number of deleted tasks
+        int tasksDeleted; // starts as 0
+
+        // Write the code to delete a single row of data
         // [Hint] Use selections to delete an item by its row ID
-        switch (sUriMatcher.match(uri)) {
+        switch (match) {
+            // Handle the single item case, recognized by the ID included in the URI path
             case TASK_WITH_ID:
+                // Get the task ID from the URI path
                 String id = uri.getPathSegments().get(1);
-                String whereClause = "_id=?";
-                String[] whereArgs = new String[] {id};
-                tasksDeleted = db.delete(TaskContract.TaskEntry.TABLE_NAME, whereClause, whereArgs);
+                // Use selections/selectionArgs to filter for this ID
+                tasksDeleted = db.delete(TABLE_NAME, "_id=?", new String[]{id});
                 break;
-
             default:
                 throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        // DONE (3) Notify the resolver of a change and return the number of items deleted
+        // Notify the resolver of a change and return the number of items deleted
         if (tasksDeleted != 0) {
+            // A task was deleted, set notification
             getContext().getContentResolver().notifyChange(uri, null);
         }
 
+        // Return the number of tasks deleted
         return tasksDeleted;
     }
 
