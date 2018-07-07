@@ -120,31 +120,48 @@ public class TaskContentProvider extends ContentProvider {
     public Cursor query(@NonNull Uri uri, String[] projection, String selection,
                         String[] selectionArgs, String sortOrder) {
 
-        // DONE (1) Get access to underlying database (read-only for query)
+        // Get access to underlying database (read-only for query)
         final SQLiteDatabase db = mTaskDbHelper.getReadableDatabase();
 
+        // Write URI match code and set a variable to return a Cursor
+        int match = sUriMatcher.match(uri);
         Cursor retCursor;
-        // DONE (2) Write URI match code and set a variable to return a Cursor
-        // DONE (3) Query for the tasks directory and write a default case
-        switch (sUriMatcher.match(uri)) {
+
+        // Query for the tasks directory and write a default case
+        switch (match) {
+            // Query for the tasks directory
             case TASKS:
-                retCursor = db.query(TaskContract.TaskEntry.TABLE_NAME, projection, selection,
-                        selectionArgs, null, null, sortOrder);
+                retCursor =  db.query(TABLE_NAME,
+                        projection,
+                        selection,
+                        selectionArgs,
+                        null,
+                        null,
+                        sortOrder);
                 break;
-
+            // Default exception
             default:
-                throw new UnsupportedOperationException("Unknown URI: " + uri);
-
+                throw new UnsupportedOperationException("Unknown uri: " + uri);
         }
 
-        // DONE (4) Set a notification URI on the Cursor and return that Cursor
+        // Set a notification URI on the Cursor and return that Cursor
         retCursor.setNotificationUri(getContext().getContentResolver(), uri);
+
+        // Return the desired Cursor
         return retCursor;
     }
 
 
+    // Implement delete to delete a single row of data
     @Override
     public int delete(@NonNull Uri uri, String selection, String[] selectionArgs) {
+
+        // TODO (1) Get access to the database and write URI matching code to recognize a single item
+
+        // TODO (2) Write the code to delete a single row of data
+        // [Hint] Use selections to delete an item by its row ID
+
+        // TODO (3) Notify the resolver of a change and return the number of items deleted
 
         throw new UnsupportedOperationException("Not yet implemented");
     }

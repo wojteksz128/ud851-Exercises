@@ -16,7 +16,6 @@
 
 package com.example.android.todolist;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -125,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements
      *
      * Implements the required callbacks to take care of loading data at all stages of loading.
      */
-    @SuppressLint("StaticFieldLeak")
     @Override
     public Loader<Cursor> onCreateLoader(int id, final Bundle loaderArgs) {
 
@@ -151,11 +149,16 @@ public class MainActivity extends AppCompatActivity implements
             public Cursor loadInBackground() {
                 // Will implement to load data
 
-                // DONE (5) Query and load all task data in the background; sort by priority
+                // Query and load all task data in the background; sort by priority
                 // [Hint] use a try/catch block to catch any errors in loading data
+
                 try {
                     return getContentResolver().query(TaskContract.TaskEntry.CONTENT_URI,
-                            null, null, null, TaskContract.TaskEntry.COLUMN_PRIORITY);
+                            null,
+                            null,
+                            null,
+                            TaskContract.TaskEntry.COLUMN_PRIORITY);
+
                 } catch (Exception e) {
                     Log.e(TAG, "Failed to asynchronously load data.");
                     e.printStackTrace();
