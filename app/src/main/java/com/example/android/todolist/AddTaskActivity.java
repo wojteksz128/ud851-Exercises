@@ -51,7 +51,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
     private int mTaskId = DEFAULT_TASK_ID;
 
-    // DONE (3) Create AppDatabase member variable for the Database
+    // Member variable for the Database
     private AppDatabase mDb;
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,7 @@ public class AddTaskActivity extends AppCompatActivity {
 
         initViews();
 
-        // DONE (4) Initialize member variable for the data base
-        this.mDb = AppDatabase.getInstance(getApplicationContext());
+        mDb = AppDatabase.getInstance(getApplicationContext());
 
         if (savedInstanceState != null && savedInstanceState.containsKey(INSTANCE_TASK_ID)) {
             mTaskId = savedInstanceState.getInt(INSTANCE_TASK_ID, DEFAULT_TASK_ID);
@@ -112,18 +111,12 @@ public class AddTaskActivity extends AppCompatActivity {
      * It retrieves user input and inserts that new task data into the underlying database.
      */
     public void onSaveButtonClicked() {
-        // DONE (5) Create a description variable and assign to it the value in the edit text
         String description = mEditText.getText().toString();
-        // DONE (6) Create a priority variable and assign the value returned by getPriorityFromViews()
         int priority = getPriorityFromViews();
-        // DONE (7) Create a date variable and assign to it the current Date
         Date date = new Date();
 
-        // DONE (8) Create taskEntry variable using the variables defined above
         TaskEntry taskEntry = new TaskEntry(description, priority, date);
-        // DONE (9) Use the taskDao in the AppDatabase variable to insert the taskEntry
         mDb.taskDao().insertTask(taskEntry);
-        // DONE (10) call finish() to come back to MainActivity
         finish();
     }
 
