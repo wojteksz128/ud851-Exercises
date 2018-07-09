@@ -78,22 +78,16 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
             @Override
             public void onSwiped(final RecyclerView.ViewHolder viewHolder, int swipeDir) {
                 // Here is where you'll implement swipe to delete
-                // DONE (1) Get the diskIO Executor from the instance of AppExecutors and
                 // call the diskIO execute method with a new Runnable and implement its run method
                 AppExecutors.getInstance().diskIO().execute(new Runnable() {
-
                     @Override
                     public void run() {
                         int position = viewHolder.getAdapterPosition();
-                        List<TaskEntry> taskEntries = mAdapter.getTasks();
-                        mDb.taskDao().deleteTask(taskEntries.get(position));
+                        List<TaskEntry> tasks = mAdapter.getTasks();
+                        mDb.taskDao().deleteTask(tasks.get(position));
+                        retrieveTasks();
                     }
                 });
-
-                // DONE (3) get the position from the viewHolder parameter
-                // DONE (4) Call deleteTask in the taskDao with the task at that position
-                // DONE (6) Call retrieveTasks method to refresh the UI
-                retrieveTasks();
             }
         }).attachToRecyclerView(mRecyclerView);
 
@@ -124,7 +118,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     @Override
     protected void onResume() {
         super.onResume();
-        // DONE (5) Extract the logic to a retrieveTasks method so it can be reused
         retrieveTasks();
     }
 
@@ -148,5 +141,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
     @Override
     public void onItemClickListener(int itemId) {
         // Launch AddTaskActivity adding the itemId as an extra in the intent
+        // TODO (2) Launch AddTaskActivity with itemId as extra for the key AddTaskActivity.EXTRA_TASK_ID
     }
 }
