@@ -17,26 +17,20 @@ package com.example.android.background.sync;
 
 import android.app.IntentService;
 import android.content.Intent;
-import android.support.annotation.Nullable;
 
-// DONE (9) Create WaterReminderIntentService and extend it from IntentService
+/**
+ * An {@link IntentService} subclass for handling asynchronous task requests in
+ * a service on a separate handler thread.
+ */
 public class WaterReminderIntentService extends IntentService {
 
-    //  DONE (10) Create a default constructor that calls super with the name of this class
     public WaterReminderIntentService() {
-        super(WaterReminderIntentService.class.getName());
+        super("WaterReminderIntentService");
     }
 
-    //  DONE (11) Override onHandleIntent
     @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-//      DONE (12) Get the action from the Intent that started this Service
+    protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
-//      DONE (13) Call ReminderTasks.executeTaskForTag and pass in the action to be performed
         ReminderTasks.executeTask(this, action);
-
     }
-
 }
-
-

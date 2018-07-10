@@ -83,13 +83,13 @@ public class MainActivity extends AppCompatActivity implements
         if (mToast != null) mToast.cancel();
         mToast = Toast.makeText(this, R.string.water_chug_toast, Toast.LENGTH_SHORT);
         mToast.show();
-        // DONE (15) Create an explicit intent for WaterReminderIntentService
-        Intent waterReminderIntentServiceIntent = new Intent(this, WaterReminderIntentService.class);
-        // DONE (16) Set the action of the intent to ACTION_INCREMENT_WATER_COUNT
-        waterReminderIntentServiceIntent.setAction(ReminderTasks.ACTION_INCREMENT_WATER_COUNT);
-        // DONE (17) Call startService and pass the explicit intent you just created
-        startService(waterReminderIntentServiceIntent);
+
+        Intent incrementWaterCountIntent = new Intent(this, WaterReminderIntentService.class);
+        incrementWaterCountIntent.setAction(ReminderTasks.ACTION_INCREMENT_WATER_COUNT);
+        startService(incrementWaterCountIntent);
     }
+
+    // TODO (14) Create a method called testNotification that triggers NotificationUtils' remindUserBecauseCharging
 
     @Override
     protected void onDestroy() {
