@@ -22,6 +22,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -76,17 +77,13 @@ public class AddTaskActivity extends AppCompatActivity {
                 // populate the UI
                 mTaskId = intent.getIntExtra(EXTRA_TASK_ID, DEFAULT_TASK_ID);
 
-                // DONE (3) Extract all this logic outside the Executor and remove the Executor
-                // DONE (2) Fix compile issue by wrapping the return type with LiveData
+                Log.d(TAG, "Actively retrieving a specific task from the DataBase");
                 final LiveData<TaskEntry> task = mDb.taskDao().loadTaskById(mTaskId);
-                // DONE (4) Observe tasks and move the logic from runOnUiThread to onChanged
-                // We will be able to simplify this once we learn more
-                // about Android Architecture Components
                 task.observe(this, new Observer<TaskEntry>() {
                     @Override
                     public void onChanged(@Nullable TaskEntry taskEntry) {
-                        // DONE (5) Remove the observer as we do not need it any more
                         task.removeObserver(this);
+                        Log.d(TAG, "Receiving database update from LiveData");
                         populateUI(taskEntry);
                     }
                 });

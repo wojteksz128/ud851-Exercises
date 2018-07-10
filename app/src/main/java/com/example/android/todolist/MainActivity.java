@@ -88,8 +88,6 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
                         int position = viewHolder.getAdapterPosition();
                         List<TaskEntry> tasks = mAdapter.getTasks();
                         mDb.taskDao().deleteTask(tasks.get(position));
-                        // DONE (6) Remove the call to retrieveTasks
-//                        retrieveTasks();
                     }
                 });
             }
@@ -112,35 +110,23 @@ public class MainActivity extends AppCompatActivity implements TaskAdapter.ItemC
         });
 
         mDb = AppDatabase.getInstance(getApplicationContext());
-        // DONE (7) Call retrieveTasks from here and remove the onResume method
         retrieveTasks();
     }
 
-    /**
-     * This method is called after this activity has been paused or restarted.
-     * Often, this is after new data has been inserted through an AddTaskActivity,
-     * so this re-queries the database data for any changes.
-     */
-    @Override
-    protected void onResume() {
-        super.onResume();
-//        retrieveTasks();
-    }
-
+    // TODO (8) This method is not retrieving the tasks any more. Refactor to a more suitable name such as setupViewModel
     private void retrieveTasks() {
-        // DONE (4) Extract all this logic outside the Executor and remove the Executor
+        // TODO (5) Remove the logging and the call to loadAllTasks, this is done in the ViewModel now
         Log.d(TAG, "Actively retrieving the tasks from the DataBase");
-        // DONE (3) Fix compile issue by wrapping the return type with LiveData
-        final LiveData<List<TaskEntry>> tasks = mDb.taskDao().loadAllTasks();
+        LiveData<List<TaskEntry>> tasks = mDb.taskDao().loadAllTasks();
+        // TODO (6) Declare a ViewModel variable and initialize it by calling ViewModelProviders.of
+        // TODO (7) Observe the LiveData object in the ViewModel
         tasks.observe(this, new Observer<List<TaskEntry>>() {
             @Override
             public void onChanged(@Nullable List<TaskEntry> taskEntries) {
+                Log.d(TAG, "Receiving database update from LiveData");
                 mAdapter.setTasks(taskEntries);
             }
         });
-        // DONE (5) Observe tasks and move the logic from runOnUiThread to onChanged
-        // We will be able to simplify this once we learn more
-        // about Android Architecture Components
     }
 
     @Override
